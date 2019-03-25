@@ -1,5 +1,7 @@
 # Object Recognition Experiment on Fog Computing Environment using Lightweight Kubernetes (k3s)
 
+For special assignment course, 5 credits. Aalto University, Espoo, Finland. 
+
 ## Devices
 - Raspberry Pi 3 Model B (2 items)
 - Intel fog reference design (1 item)
