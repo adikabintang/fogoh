@@ -4,36 +4,39 @@ import socket
 import pickle
 import struct
 import time
+import base64
+import sys
 
 def send_video():
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
     vid = cv2.VideoCapture(0) # 0 -> webcam, default: 30 fps
-    vid.set(cv2.CAP_PROP_FPS, 10)
     
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect(("127.0.0.1", 8080))
-        
-        i = 0
-        while i < 300:
-            status, frame = vid.read()
-            status, frame = cv2.imencode('.jpg', frame, encode_param)
-            #status, frame = cv2.imencode('.jpg', frame)
-            if not status:
-                logging.error("read frame error")
-                return
-            else:
-                data = pickle.dumps(frame, 0)
-                size = len(data)
-                s.sendall(struct.pack(">L", size) + data)
-                time.sleep(0.1)
-                cv2.waitKey(1000)
-            
-            i += 1
+        try:
+            s.connect(("127.0.0.1", 8080))
 
+            i = 0
+            while i < 200:
+                status, frame_asli = vid.read()
+                
+                print("frame: %d" % i)
+                status, frame = cv2.imencode('.jpg', frame_asli, encode_param)
+                if not status:
+                    logging.error("read frame error")
+                    return
+                else:
+                    jpg_as_text = base64.b64encode(frame)
+                    s.sendall(jpg_as_text)
+                    # https://stackoverflow.com/questions/16681007/base64-encrypted-allowed-characters
+                    s.send(b':,')
+
+                time.sleep(0.1)
+                
+                i += 1
+        except KeyboardInterrupt:
+            s.close()
+    
     vid.release()
 
-def main():
-    send_video()
-    
 if __name__ == "__main__":
-    main()
+    send_video()

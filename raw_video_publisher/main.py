@@ -1,76 +1,46 @@
 """
-inspiration: 
-https://www.snip2code.com/Snippet/1347060/Example-of-asyncio-nats-and-threads-usin
+https://stackoverflow.com/questions/50678184/how-to-pass-additional-parameters-to-handle-client-coroutine
 """
 import asyncio
-import time
-import socket, struct
-from threading import Thread
+import pickle
+import base64
+import sys
 from nats.aio.client import Client as NATS
-from nats.aio.errors import ErrConnectionClosed, ErrTimeout
-import cv2, pickle
+from stan.aio.client import Client as STAN
 
-class Component(object):
-    def __init__(self, nc, loop):
-        self.nc = nc
-        self.loop = loop
+class TcpServer:
+    def __init__(self, loop_asyncio):
+        self._nc = NATS()
+        self._sc = STAN()
+        self._loop = loop_asyncio
         
-    def run(self):
-        yield from self.nc.connect(io_loop=self.loop)
-        yield from self.nc.flush()
+    async def handle_echo(self, reader, writer):
+        await self._nc.connect("192.168.0.101:4222", io_loop=self._loop)
+        await self._sc.connect("test-cluster", "client-1", nats=self._nc)
 
-def another_thread(c):
-    if not c.nc.is_connected:
-        print("Not connected to NATS!")
-        return
-
-    HOST = "0.0.0.0"  
-    PORT = 8080 
-    sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    sock.bind((HOST, PORT))
-    sock.listen(2)
-    conn, addr = sock.accept()
-    data = b""
-    payload_size = struct.calcsize(">L")
-
-    while True:
-        while len(data) < payload_size:
-            data += conn.recv(4096)
-            if len(data) == 0:
+        while True:
+            try:
+                data = await reader.readuntil(separator=b':,')
+                await self._sc.publish("raw.video", data[:-2])
+            except:
+                print("Unexpected error:", sys.exc_info()[0])
                 break
-        
-        if len(data) != 0:
-            
-            packed_msg_size = data[:payload_size]
-            data = data[payload_size:]
-            msg_size = struct.unpack(">L", packed_msg_size)[0]
-            while len(data) < msg_size:
-                data += conn.recv(4096)
 
-            frame_data = data[:msg_size]
-            data = data[msg_size:]
+        await self._sc.close()
+        await self._nc.close()
 
-            frame = pickle.loads(frame_data, fix_imports=True, encoding="bytes")
-            asyncio.run_coroutine_threadsafe(
-                c.nc.publish("raw.camera", 
-                frame.tobytes()),
-                loop=c.loop)
-            
-        else:
-            conn, addr = sock.accept()
-    
+loop = asyncio.get_event_loop()
+tcp_server = TcpServer(loop)
+coro = asyncio.start_server(tcp_server.handle_echo, '127.0.0.1', 8080, loop=loop)
+server = loop.run_until_complete(coro)
 
-def main():
-    nc = NATS()
-    loop = asyncio.get_event_loop()
-    component = Component(nc, loop)
-
-    loop.run_until_complete(component.run())
-
-    thr = Thread(target=another_thread, args=(component,))
-    thr.start()
-
+# Serve requests until Ctrl+C is pressed
+try:
     loop.run_forever()
+except KeyboardInterrupt:
+    pass
 
-if __name__ == '__main__':
-    main()
+# Close the server
+server.close()
+loop.run_until_complete(server.wait_closed())
+loop.close()
