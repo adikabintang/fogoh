@@ -2,6 +2,9 @@
 
 For special assignment course, 5 credits. Aalto University, Espoo, Finland. 
 
+## System Architecture
+![system architecture](figures/special_assignment.png)
+
 ## Devices
 - Raspberry Pi 3 Model B (2 items)
 - Intel fog reference design (1 item)
