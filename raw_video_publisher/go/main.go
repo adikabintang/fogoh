@@ -28,7 +28,7 @@ func main() {
 	sc, _ := stan.Connect(nats_cluster_name, nats_client_id, url_option)
 
 	server.OnNewMessage(func(c *tcp_server.Client, message string) {
-		sc.Publish("foo", []byte(message[:len(message)-1]))
+		sc.Publish("raw.video", []byte(message[:len(message)-1]))
 	})
 
 	server.Listen()
