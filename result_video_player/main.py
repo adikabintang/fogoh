@@ -22,11 +22,8 @@ async def run(loop):
 
     async def message_handler(msg):
         global vid_writer
-        print("masuk")
-        data = msg.data 
-        print("jir")
+        data = msg.data
         try:
-            print("a")
             jpg_original = base64.b64decode(data)
             jpg_as_np = numpy.frombuffer(jpg_original, dtype=numpy.uint8)
             image_buffer = cv2.imdecode(jpg_as_np, flags=-1)

@@ -28,7 +28,7 @@ def send_video():
                     jpg_as_text = base64.b64encode(frame)
                     s.sendall(jpg_as_text)
                     # https://stackoverflow.com/questions/16681007/base64-encrypted-allowed-characters
-                    s.send(b':,')
+                    s.send(b':')
 
                 time.sleep(0.1)
                 
