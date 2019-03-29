@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: raw-video-publisher
+  labels:
+    app: raw-video-publisher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: raw-video-publisher
+  template:
+    metadata:
+      labels:
+        app: raw-video-publisher
+    spec:
+      containers:
+      - name: raw-video-publisher
+        image: adikabintang/fogoh-raw-vid-pub-go:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: NATS_ENDPOINT
+          value: "http://server-simple.default.svc.cluster.local:80" # TODO: nats svc
+        - name: NATS_CLUSTER_NAME
+          value: "fogoh-nats"
+        - name: NATS_CLIENT_ID
+          value: "raw_publisher_1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: raw-video-publisher
+  labels:
+    app: raw-video-publisher
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+      #nodePort: 31113
+  selector:
+    app: raw-video-publisher
