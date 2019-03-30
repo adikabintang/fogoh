@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx-rtmp
-        image: dvdgiessen/nginx-rtmp-docker:latest
+        image: dvdgiessen/nginx-rtmp-docker:latest # https://github.com/DvdGiessen/nginx-rtmp-docker
         ports:
         - containerPort: 1935
 ---
