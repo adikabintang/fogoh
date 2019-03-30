@@ -1,0 +1,14 @@
+apiVersion: "nats.io/v1alpha2"
+kind: "NatsCluster"
+metadata:
+  name: "fogoh-nats"
+spec:
+  size: 1
+---
+apiVersion: "streaming.nats.io/v1alpha1"
+kind: "NatsStreamingCluster"
+metadata:
+  name: "example-stan"
+spec:
+  size: 1
+  natsSvc: "fogoh-nats"
