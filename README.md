@@ -33,3 +33,9 @@ sudo -E k3s agent -s ${MASTER_IP} -t ${NODE_TOKEN}
 ```bash
 k3s kubectl get node -o wide
 ```
+## Building Docker Multiarch Images
+The docker images must run on multiple CPU architecture, since the aim of this project is to dpeloy it on kubernets consisting of heterogeneous devices.
+
+The instructions on how to build docker images with multiarch support can be found here: https://lobradov.github.io/Building-docker-multiarch-images/
+
+*note*: The source code on the [Lobradov's tutorial](https://lobradov.github.io/Building-docker-multiarch-images/) seems to be broken, so I forked and changed a little: https://github.com/adikabintang/docker-multiarch-builder 
