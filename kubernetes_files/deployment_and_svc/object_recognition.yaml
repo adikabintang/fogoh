@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: object-recognition
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: object-recognition
+  template:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchFields:
+          - key: machinetype
+            operator: In
+            values:
+            - intelfog
+    metadata:
+      labels:
+        name: object-recognition
+    spec:
+      containers:
+      - name: object-recognition
+        image: adikabintang/fogoh-obj-recognition:latest
+      terminationGracePeriodSeconds: 30
