@@ -9,18 +9,19 @@ spec:
     matchLabels:
       name: object-recognition
   template:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchFields:
-          - key: machinetype
-            operator: In
-            values:
-            - intelfog
     metadata:
       labels:
         name: object-recognition
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: machinetype
+                operator: In
+                values:
+                - intelfog
       containers:
       - name: object-recognition
         image: adikabintang/fogoh-obj-recognition:latest
