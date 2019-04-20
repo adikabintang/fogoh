@@ -24,7 +24,7 @@ func main() {
 	}
 
 	url_option := stan.NatsURL(nats_endpoint)
-	server := tcp_server.New("0.0.0.0:8080")
+	server := tcp_server.New("0.0.0.0:3000")
 	sc, _ := stan.Connect(nats_cluster_name, nats_client_id, url_option)
 
 	server.OnNewMessage(func(c *tcp_server.Client, message string) {

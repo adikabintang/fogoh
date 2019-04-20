@@ -18,7 +18,7 @@ spec:
       - name: raw-video-publisher
         image: adikabintang/fogoh-raw-vid-pub-go:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
         env:
         - name: NATS_ENDPOINT
           value: "nats://fogoh-nats:4222/" # TODO: nats svc
@@ -36,9 +36,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 8080
+    - port: 3000
       protocol: TCP
-      targetPort: 8080
+      targetPort: 3000
       #nodePort: 31113
   selector:
     app: raw-video-publisher
