@@ -16,9 +16,10 @@ spec:
     spec:
       containers:
       - name: nginx-rtmp
-        image: dvdgiessen/nginx-rtmp-docker:latest # https://github.com/DvdGiessen/nginx-rtmp-docker
+        image: alfg/nginx-rtmp:latest # https://github.com/alfg/docker-nginx-rtmp
         ports:
         - containerPort: 1935
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -29,9 +30,14 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 1935
+    - name: rtmp
+      port: 1935
       protocol: TCP
       targetPort: 1935
       nodePort: 31113
+    - name: hls
+      port: 8080
+      targetPort: 80
+      nodePort: 31119
   selector:
     app: nginx-rtmp
