@@ -28,8 +28,8 @@ async def run(loop):
             jpg_as_np = numpy.frombuffer(jpg_original, dtype=numpy.uint8)
             image_buffer = cv2.imdecode(jpg_as_np, flags=-1)
             
-            vid_writer.write(image_buffer.astype(numpy.uint8))
-            #cv2.imshow("oo", image_buffer)
+            #vid_writer.write(image_buffer.astype(numpy.uint8))
+            cv2.imshow("oo", image_buffer)
             cv2.waitKey(1)
         except:
             print("Unexpected error:", sys.exc_info())
