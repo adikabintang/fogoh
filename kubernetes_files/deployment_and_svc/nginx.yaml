@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx-rtmp
-        image: alfg/nginx-rtmp:latest # https://github.com/alfg/docker-nginx-rtmp
+        image: adikabintang/nginx-rtmp:latest # https://github.com/alfg/docker-nginx-rtmp
         ports:
         - containerPort: 1935
         - containerPort: 8080
