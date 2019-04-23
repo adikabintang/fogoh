@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fogoh-streamer-to-nginx
+  labels:
+    app: fogoh-streamer-to-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fogoh-streamer-to-nginx
+  template:
+    metadata:
+      labels:
+        app: fogoh-streamer-to-nginx
+    spec:
+      containers:
+      - name: fogoh-streamer-to-nginx
+        image: adikabintang/fogoh-streamer-to-nginx:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NATS_ENDPOINT
+          value: "nats://fogoh-nats:4222/"
+        - name: NATS_CLUSTER_NAME
+          value: "fogoh-nats"
+        - name: NATS_CLIENT_ID
+          value: "streamer_to_nginx_1"
+        - name: RTMP_ENDPOINT
+          value: "rtmp://nginx-rtmp.default.svc.cluster.local:1935"
