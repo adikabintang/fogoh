@@ -39,6 +39,6 @@ spec:
     - port: 3000
       protocol: TCP
       targetPort: 3000
-      nodePort: 31113
+      nodePort: 31123
   selector:
     app: raw-video-publisher
