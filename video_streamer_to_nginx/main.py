@@ -20,7 +20,7 @@ async def run(loop):
         if "NATS_CLIENT_ID" in os.environ else "streamer-to-nginx"
     rtmp_endpoint = os.environ['RTMP_ENDPOINT'] \
         if "RTMP_ENDPOINT" in os.environ \
-            else "rtmp://192.168.0.101:1935/live/live"
+            else "rtmp://192.168.0.101:1935/stream/video"
 
     nc = NATS()
     await nc.connect(nats_endpoint, loop=loop)
