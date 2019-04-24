@@ -23,7 +23,7 @@ spec:
         - name: NATS_ENDPOINT
           value: "nats://fogoh-nats:4222/" # TODO: nats svc
         - name: NATS_CLUSTER_NAME
-          value: "fogoh-nats"
+          value: "fogoh-streaming-nats"
         - name: NATS_CLIENT_ID
           value: "raw_publisher_1"
 ---

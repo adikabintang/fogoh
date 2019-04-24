@@ -8,7 +8,7 @@ spec:
 apiVersion: "streaming.nats.io/v1alpha1"
 kind: "NatsStreamingCluster"
 metadata:
-  name: "fogoh-nats"
+  name: "fogoh-streaming-nats"
 spec:
   size: 1
   natsSvc: "fogoh-nats"

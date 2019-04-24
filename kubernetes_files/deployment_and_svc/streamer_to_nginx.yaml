@@ -23,7 +23,7 @@ spec:
         - name: NATS_ENDPOINT
           value: "nats://fogoh-nats:4222/"
         - name: NATS_CLUSTER_NAME
-          value: "fogoh-nats"
+          value: "fogoh-streaming-nats"
         - name: NATS_CLIENT_ID
           value: "streamer_to_nginx_1"
         - name: RTMP_ENDPOINT
