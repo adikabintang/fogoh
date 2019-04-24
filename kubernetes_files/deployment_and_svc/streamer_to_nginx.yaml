@@ -27,4 +27,4 @@ spec:
         - name: NATS_CLIENT_ID
           value: "streamer_to_nginx_1"
         - name: RTMP_ENDPOINT
-          value: "rtmp://nginx-rtmp.default.svc.cluster.local:1935"
+          value: "rtmp://nginx-rtmp.default.svc.cluster.local:1935/stream/video"
