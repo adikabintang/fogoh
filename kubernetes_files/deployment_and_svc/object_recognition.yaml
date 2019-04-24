@@ -25,4 +25,11 @@ spec:
       containers:
       - name: object-recognition
         image: adikabintang/fogoh-obj-recognition:latest
+        env:
+        - name: NATS_ENDPOINT
+          value: "nats://fogoh-nats:4222/" # TODO: nats svc
+        - name: NATS_CLUSTER_NAME
+          value: "fogoh-streaming-nats"
+        - name: NATS_CLIENT_ID
+          value: "obj-recognition-1"
       terminationGracePeriodSeconds: 30
