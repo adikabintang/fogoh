@@ -34,7 +34,7 @@ async def run(loop):
         global process_time_avg, counter
         try:
             # data = msg.data #data
-            before_ms = int(round(time.time() * 1000))
+            t0_ms = int(round(time.time() * 1000))
             
             # jpg_original = base64.b64decode(data)
 
@@ -53,8 +53,8 @@ async def run(loop):
             await sc.publish("res.vid",
                 base64.b64encode(single_frame_data.SerializeToString()))
             
-            after_ms = int(round(time.time() * 1000))
-            process_time = after_ms - before_ms
+            t1_ms = int(round(time.time() * 1000))
+            process_time = t1_ms - t0_ms
             counter += 1
             process_time_avg = (process_time_avg * (counter - 1) \
                 + process_time) / counter
