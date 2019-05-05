@@ -19,7 +19,7 @@ spec:
       serviceAccountName: nats-operator
       containers:
       - name: nats-operator
-        image: adikabintang/nats-operator-armv7l:0.4.3-v1alpha2 # change to ARM compiled image
+        image: adikabintang/nats-operator:0.4.3-v1alpha2 # change to ARM compiled image
         imagePullPolicy: IfNotPresent
         args:
         - nats-operator
