@@ -31,5 +31,7 @@ spec:
         - name: NATS_CLUSTER_NAME
           value: "fogoh-streaming-nats"
         - name: NATS_CLIENT_ID
-          value: "obj-recognition-1"
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name # pod name
       terminationGracePeriodSeconds: 30

@@ -25,6 +25,8 @@ spec:
         - name: NATS_CLUSTER_NAME
           value: "fogoh-streaming-nats"
         - name: NATS_CLIENT_ID
-          value: "streamer_to_nginx_1"
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name # pod name
         - name: RTMP_ENDPOINT
           value: "rtmp://nginx-rtmp.default.svc.cluster.local:1935/stream/video"
