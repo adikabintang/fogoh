@@ -3,10 +3,10 @@ import numpy
 import os
 
 class ObjectDetection:
-    conf_threshold = 0.5  #Confidence threshold
+    conf_threshold = 0.25  #Confidence threshold
     nms_threshold = 0.4   #Non-maximum suppression threshold
-    inp_width = 256       #Width of network's input image, used in main.py
-    inp_height = 256      #Height of network's input image, used in main.py
+    inp_width = 128       #Width of network's input image, used in main.py
+    inp_height = 128      #Height of network's input image, used in main.py
     
     classes_file = os.path.join(os.path.dirname(__file__), "coco.names")
     classes = None
@@ -120,4 +120,11 @@ class ObjectDetection:
             self.draw_pred(
                 frame, class_id_list[i],
                 confidences[i], left, top, left + width, top + height)
+    
+    def detec(self, jpg_frame):
+        image_buffer, outs_layer = self.preprocess(jpg_frame)
+        self.postprocess(image_buffer, outs_layer)
+        ret, buff = cv2.imencode('.jpg', image_buffer)
+        return buff
+            
             
