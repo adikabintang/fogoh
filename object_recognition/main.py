@@ -10,6 +10,7 @@ import time
 import sys
 import os
 import uvloop
+import one_frame_pb2
 
 obj_detection = ObjectDetection()
 process_time_avg = 0
@@ -21,7 +22,8 @@ async def run(loop):
     nats_cluster_name = os.environ['NATS_CLUSTER_NAME'] \
         if "NATS_CLUSTER_NAME" in os.environ else "test-cluster"
     nats_client_id = os.environ['NATS_CLIENT_ID'] \
-        if "NATS_CLIENT_ID" in os.environ else "object-recognition"
+        if "NATS_CLIENT_ID" in os.environ \
+            else "obj_recog" + str((round(time.time() * 1000)))
         
     nc = NATS()
     await nc.connect(nats_endpoint, loop=loop)
@@ -31,22 +33,25 @@ async def run(loop):
     async def message_handler(msg):
         global process_time_avg, counter
         try:
-            data = msg.data #data
+            # data = msg.data #data
             before_ms = int(round(time.time() * 1000))
             
-            jpg_original = base64.b64decode(data)
+            # jpg_original = base64.b64decode(data)
+
+            proto_data = base64.b64decode(msg.data)
+            single_frame_data = one_frame_pb2.OneFrame()
+            single_frame_data.ParseFromString(proto_data)
+            jpg_frame = base64.b64decode(
+                single_frame_data.frame_jpg_in_base64)
             
-            # Runs the forward pass to get output of the output layers
-            image_buffer, outs_layer = obj_detection.preprocess(jpg_original)
+            result_buff_jpg = obj_detection.detec(jpg_frame) 
+            jpg_as_text = base64.b64encode(result_buff_jpg)
+
+            single_frame_data.frame_jpg_in_base64 = jpg_as_text
             
-            # Remove the bounding boxes with low confidence
-            obj_detection.postprocess(image_buffer, outs_layer)
-            
-            #cv2.imshow("oi", frame)
-            ret, buff = cv2.imencode('.jpg', image_buffer)
-            jpg_as_text = base64.b64encode(buff)
-            
-            await sc.publish("res.vid", jpg_as_text)
+            #await sc.publish("res.vid", jpg_as_text)
+            await sc.publish("res.vid",
+                base64.b64encode(single_frame_data.SerializeToString()))
             
             after_ms = int(round(time.time() * 1000))
             process_time = after_ms - before_ms
@@ -54,13 +59,14 @@ async def run(loop):
             process_time_avg = (process_time_avg * (counter - 1) \
                 + process_time) / counter
             print("process time: %d" % process_time)
-            print("counter: %d, avg: %d" % (counter, process_time))
+            print("nth: %d, counter: %d, avg: %d" 
+                % (single_frame_data.frame_order_nth, counter, process_time))
             
         except:
             print("Unexpected error:", sys.exc_info()[0])
 
     await sc.subscribe("raw.video", \
-        start_at='last_received', cb=message_handler)
+        start_at='last_received', queue="obj_recog", cb=message_handler)
 
 if __name__ == '__main__':
     loop = uvloop.new_event_loop()

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message OneFrame {
+  string frame_jpg_in_base64 = 1;
+  string video_source_id = 2;
+  int32 millis = 3;
+  uint64 frame_order_nth = 4;
+}
