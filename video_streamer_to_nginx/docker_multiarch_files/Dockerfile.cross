@@ -2,19 +2,14 @@ FROM adikabintang/python-opencv-alpine:__BASEIMAGE_ARCH__-alp3.9-py3.7-ocv4.1
 
 __CROSS_COPY qemu/qemu-__QEMU_ARCH__-static /usr/bin/
 
-# ROM adikabintang/python-opencv-alpine:alp3.9-py3.7-ocv4.1
-
-RUN pip install --no-cache-dir asyncio-nats-client==0.8.2 \
-    asyncio-nats-streaming==0.2.0
-
 RUN apk add build-base python-dev py-pip jpeg-dev zlib-dev
 ENV LIBRARY_PATH=/lib:/usr/lib
 
-RUN pip install --no-cache-dir uvloop
-RUN pip install --no-cache-dir Pillow
+RUN pip install --no-cache-dir asyncio-nats-client==0.8.2 \
+    asyncio-nats-streaming==0.2.0
+RUN pip install --no-cache-dir uvloop Pillow protobuf
 RUN apk add ffmpeg
 WORKDIR /usr/src/app
 COPY main.py ./
 
 CMD [ "python", "./main.py" ]
-
