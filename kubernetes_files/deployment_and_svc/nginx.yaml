@@ -1,3 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    daemon off;
+
+    error_log  logs/error.log;
+
+    events {
+        worker_connections  1024;
+    }
+
+    rtmp {
+        server {
+            listen 1935; # Listen on standard RTMP port
+            chunk_size 4000;
+
+            application show {
+                live on;
+                # Turn on HLS
+                hls on;
+                hls_path /opt/data/hls;
+                #hls_fragment 5;
+                #hls_playlist_length 10;
+                # disable consuming the stream from nginx as rtmp
+                #deny play all;
+            }
+        }
+    }
+
+    http {
+        sendfile off;
+        tcp_nopush on;
+        #aio on;
+        directio 512;
+        default_type application/octet-stream;
+
+        server {
+          listen 80;
+
+          location / {
+              # Disable cache
+              add_header 'Cache-Control' 'no-cache';
+
+              # CORS setup
+              add_header 'Access-Control-Allow-Origin' '*' always;
+              add_header 'Access-Control-Expose-Headers' 'Content-Length';
+
+              # allow CORS preflight requests
+              if ($request_method = 'OPTIONS') {
+                  add_header 'Access-Control-Allow-Origin' '*';
+                  add_header 'Access-Control-Max-Age' 1728000;
+                  add_header 'Content-Type' 'text/plain charset=UTF-8';
+                  add_header 'Content-Length' 0;
+                  return 204;
+              }
+
+              types {
+                  application/dash+xml mpd;
+                  application/vnd.apple.mpegurl m3u8;
+                  video/mp2t ts;
+              }
+
+              root /opt/data;
+          }
+        }
+      }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,10 +86,18 @@ spec:
     spec:
       containers:
       - name: nginx-rtmp
-        image: adikabintang/nginx-rtmp:latest # https://github.com/alfg/docker-nginx-rtmp
+        image: adikabintang/nginx-rtmp:latest 
         ports:
         - containerPort: 1935
         - containerPort: 8080
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /opt/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
 ---
 apiVersion: v1
 kind: Service
