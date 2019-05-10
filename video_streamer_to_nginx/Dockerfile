@@ -4,4 +4,5 @@ RUN pip install --no-cache-dir asyncio-nats-client==0.8.2 \
     uvloop Pillow protobuf
 WORKDIR /usr/src/app
 COPY main.py ./
+COPY one_frame_pb2.py ./
 CMD [ "python", "./main.py" ]
