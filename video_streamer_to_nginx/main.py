@@ -23,7 +23,7 @@ async def run(loop):
             else "streamer" + str((round(time.time() * 1000)))
     streaming_dest_address = os.environ['RTMP_ENDPOINT'] \
         if "RTMP_ENDPOINT" in os.environ \
-            else "rtmp://192.168.0.101:1935/stream/"
+            else "rtmp://192.168.0.101:1935/show/"
 
     nc = NATS()
     await nc.connect(nats_endpoint, loop=loop)
@@ -48,14 +48,23 @@ async def run(loop):
             correct_img = cv2.cvtColor(image_buffer, cv2.COLOR_BGR2RGB)
             im = Image.fromarray(correct_img)
 
+            #streaming_dest_address = "rtmp://localhost:1935/show/"
+
             video_dest = streaming_dest_address + \
                 single_frame_data.video_source_id
 
             if ffmpeg_process.get(single_frame_data.video_source_id) == None:
                 ffmpeg_process[single_frame_data.video_source_id] = \
-                    subprocess.Popen(
-                        ['ffmpeg', '-f', 'image2pipe', '-r', '18', \
-                            '-i', '-', '-f', 'flv', video_dest], \
+                    subprocess.Popen(["ffmpeg",
+                            "-re",
+                            "-i", "-",
+                            "-vcodec", "libx264",
+                            "-vprofile", "baseline",
+                            "-g", "30",
+                            "-acodec", "aac",
+                            "-strict", "-2",
+                            "-f", "flv",
+                            video_dest], \
                             stdin=subprocess.PIPE)
 
             p = ffmpeg_process[single_frame_data.video_source_id]

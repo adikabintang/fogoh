@@ -29,4 +29,4 @@ spec:
             fieldRef:
               fieldPath: metadata.name # pod name
         - name: RTMP_ENDPOINT
-          value: "rtmp://nginx-rtmp.default.svc.cluster.local:1935/stream/"
+          value: "rtmp://nginx-rtmp.default.svc.cluster.local:1935/show/"
