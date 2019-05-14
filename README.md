@@ -7,9 +7,7 @@ For special assignment course, 5 credits. Aalto University, Espoo, Finland.
 
 This architecture is influenced by these articles:
 - https://nats.io/blog/how-clarifai-uses-nats-and-kubernetes-for-machine-learning/
-https://dzone.com/articles/real-time-high-performance-machine-learning-using
-- https://nats.io/blog/how-clarifai-uses-nats-and-kubernetes-for-machine-learning/
-https://dzone.com/articles/real-time-high-performance-machine-learning-using
+- https://dzone.com/articles/real-time-high-performance-machine-learning-using
 
 ## Devices
 - Raspberry Pi 3 Model B (2 items)
