@@ -51,9 +51,7 @@ The instructions on how to build docker images with multiarch support can be fou
 Why YOLOv3? Why not SSD?
 ```
 
-See this: https://hackernoon.com/efficient-implementation-of-mobilenet-and-yolo-object-detection-algorithms-for-image-annotation-717e867fa27d
+Reference: https://hackernoon.com/efficient-implementation-of-mobilenet-and-yolo-object-detection-algorithms-for-image-annotation-717e867fa27d
 ```
 Hence choose SSDs on good microprocessors, else YOLO is the goto for microprocessor-based computations.
 ```
-We only use Intel FRD here, so no GPU involved. Why?
-Because working with `jetson tx1 + docker + tensorrt + tensorflow + cuda = me half crazy`. The problem is with `dockerizing` all of these. It does not run out of the box and due to time limitation, let's be healthy. Check this [issue](https://github.com/NVIDIA/nvidia-docker/issues/214) out. If they support it by the time you read this sentence, the game may change.
