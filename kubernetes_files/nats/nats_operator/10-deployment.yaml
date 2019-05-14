@@ -20,7 +20,7 @@ spec:
       containers:
       - name: nats-operator
         image: adikabintang/nats-operator:0.4.3-v1alpha2 # change to ARM compiled image
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         args:
         - nats-operator
         # Uncomment to perform a cluster-scoped deployment in supported versions.
