@@ -1,3 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: raw-video-publisher
+  labels:
+    app: raw-video-publisher
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+      nodePort: 31123
+  selector:
+    app: raw-video-publisher
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,19 +44,3 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name # pod name
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: raw-video-publisher
-  labels:
-    app: raw-video-publisher
-spec:
-  type: NodePort
-  ports:
-    - port: 3000
-      protocol: TCP
-      targetPort: 3000
-      nodePort: 31123
-  selector:
-    app: raw-video-publisher
