@@ -25,7 +25,9 @@ spec:
         - name: NATS_CLUSTER_NAME
           value: "fogoh-streaming-nats"
         - name: NATS_CLIENT_ID
-          value: "raw_publisher_1"
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name # pod name
 ---
 apiVersion: v1
 kind: Service
