@@ -1,17 +1,18 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: object-recognition
   labels:
-    k8s-app: fluentd-logging
+    app: object-recognition
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      name: object-recognition
+      app: object-recognition
   template:
     metadata:
       labels:
-        name: object-recognition
+        app: object-recognition
     spec:
       affinity:
         nodeAffinity:
@@ -34,4 +35,3 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name # pod name
-      terminationGracePeriodSeconds: 30
