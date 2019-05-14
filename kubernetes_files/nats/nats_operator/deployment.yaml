@@ -32,7 +32,7 @@ spec:
       serviceAccountName: nats-streaming-operator
       containers:
       - name: nats-streaming-operator
-        image: adikabintang/nats-streaming-operator:v0.2.2-v1alpha1
+        image: adikabintang/nats-streaming-operator:latest
         imagePullPolicy: Always
         env:
         - name: MY_POD_NAMESPACE
