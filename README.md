@@ -56,5 +56,3 @@ Reference: https://hackernoon.com/efficient-implementation-of-mobilenet-and-yolo
 ```
 Hence choose SSDs on good microprocessors, else YOLO is the goto for microprocessor-based computations.
 ```
-
-http://192.168.0.102:31119/hls/video.m3u8
